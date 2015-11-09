@@ -335,6 +335,33 @@ class Disk(object):
         disk_destroy(self._ped_disk)
         self._disk = disk_new(self._ped_device)
 
+    @diskDecorator(error=True)
+    def set_partition_geom(self, part, start, end):
+        """
+        Sets the partition geometry.
+
+        This function calls commit.
+
+        TODO: add proper docstring
+
+        """
+        if part and isinstance(part, Partition):
+            partition = part._partition
+        elif type(part) is int:
+            partition = self._get_ped_partition(part)
+        else:
+            raise PartitionError(705)
+        if partition_is_busy(partition):
+            raise PartitionError(706)
+        if disk_set_partition_geom(self._ped_disk, partition,
+                                   device_get_constraint(self._ped_device),
+                                   start, end) == 0:
+            raise PartitionError(709)
+
+        self.commit()
+        # Reload the information from the device.
+        self._disk = disk_new(self._ped_device)
+
     @diskDecorator()
     def delete_all(self):
         """

@@ -211,6 +211,13 @@ disk_get_type = parted.ped_disk_type_get
 disk_get_type.restype = POINTER(PedDiskType)
 disk_remove_partition = parted.ped_disk_remove_partition
 disk_remove_partition.argtypes = [POINTER(PedDisk), POINTER(PedPartition)]
+disk_set_partition_geom = parted.ped_disk_set_partition_geom
+disk_set_partition_geom.argtypes = [POINTER(PedDisk),
+                                    POINTER(PedPartition),
+                                    POINTER(PedConstraint),
+                                    PedSector,
+                                    PedSector]
+
 
 # Partition Function conversions
 partition_new = parted.ped_partition_new
